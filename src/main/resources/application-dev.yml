@@ -1,0 +1,17 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api/v1
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/backend_assignment
+    username: root
+    password: toor
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+        dialect.storage_engine: innodb
+        jdbc.lob.non_contextual_creation: true
+        enable_lazy_load_no_trans: true
