@@ -9,9 +9,16 @@ spring:
     username: root
     password: toor
   jpa:
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
+        ddl-auto: update
         format_sql: true
         dialect.storage_engine: innodb
         jdbc.lob.non_contextual_creation: true
         enable_lazy_load_no_trans: true
+    show-sql: true
+  jwt:
+    expiration-time: 864000000
+    secret-key: PBKDF2WithHmacqweFqasd2sghSHA256
