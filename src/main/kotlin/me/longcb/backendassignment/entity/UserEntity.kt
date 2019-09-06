@@ -7,7 +7,7 @@ import javax.persistence.Table
 @Entity
 @Table(name = "users")
 data class UserEntity(
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     var name: String,
     @Column(name = "encrypted_password", nullable = false)
     var encryptedPassword: String

@@ -17,7 +17,7 @@ class UserController : BaseController() {
     @Autowired
     private lateinit var userService: UserService
 
-    @PostMapping(value = ["/seed"])
+    @PostMapping("/seed")
     @ResponseStatus(value = HttpStatus.OK)
     fun seed() {
         userService.seedUser()

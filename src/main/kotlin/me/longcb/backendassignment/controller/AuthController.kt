@@ -1,8 +1,8 @@
 package me.longcb.backendassignment.controller
 
-import JwtService
 import me.longcb.backendassignment.dto.LoginDto
 import me.longcb.backendassignment.model.Login
+import me.longcb.backendassignment.service.JwtService
 import me.longcb.backendassignment.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
@@ -27,7 +27,7 @@ class AuthController : BaseController() {
         lateinit var httpStatus: HttpStatus
         val user = userService.checkLoginAndGetUser(login)
         if (user != null) {
-            dto.jwtToken = jwtService.generateLoginToken(user.id)
+            dto.accessToken = jwtService.generateLoginToken(user.id)
             dto.message = LOGIN_SUCCESS
             httpStatus = HttpStatus.OK
         } else {

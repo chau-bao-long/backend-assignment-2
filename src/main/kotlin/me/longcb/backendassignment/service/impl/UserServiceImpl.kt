@@ -6,6 +6,7 @@ import me.longcb.backendassignment.repository.UserRepository
 import me.longcb.backendassignment.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
@@ -30,7 +31,6 @@ class UserServiceImpl: UserService {
         return user
     }
 
-    override fun getUserByName(name: String?): UserEntity? {
-        return userRepository.findByName(name)
-    }
+    override fun getUserById(id: Long?): UserEntity? =
+            if(id != null) userRepository.findByIdOrNull(id) else null
 }

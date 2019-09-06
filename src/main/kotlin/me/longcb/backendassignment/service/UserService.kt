@@ -6,7 +6,7 @@ import me.longcb.backendassignment.model.Login
 interface UserService {
     fun checkLoginAndGetUser(login: Login): UserEntity?
 
-    fun getUserByName(name: String?): UserEntity?
+    fun getUserById(id: Long?): UserEntity?
 
     fun seedUser()
 }

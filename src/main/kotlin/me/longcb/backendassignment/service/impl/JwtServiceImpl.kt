@@ -1,6 +1,5 @@
 package me.longcb.backendassignment.service.impl
 
-import JwtService
 import com.nimbusds.jose.*
 import com.nimbusds.jose.crypto.DirectEncrypter
 import com.nimbusds.jose.jwk.source.ImmutableSecret
@@ -9,6 +8,7 @@ import com.nimbusds.jose.proc.SimpleSecurityContext
 import com.nimbusds.jwt.JWTClaimsSet
 import com.nimbusds.jwt.proc.ConfigurableJWTProcessor
 import com.nimbusds.jwt.proc.DefaultJWTProcessor
+import me.longcb.backendassignment.service.JwtService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Scope
 import org.springframework.stereotype.Service
@@ -17,7 +17,6 @@ import java.util.*
 @Service
 @Scope("prototype")
 class JwtServiceImpl : JwtService {
-
     @Value("\${spring.jwt.expiration-time}")
     private var expirationTime: Int? = null
 
@@ -39,14 +38,14 @@ class JwtServiceImpl : JwtService {
 
     override fun validateLoginToken(token: String?): Boolean {
         if (token.isNullOrBlank()) return false
-        val name = getNameFromLoginToken(token)
-        return name.isNullOrBlank() && !isTokenExpired(token)
+        val id = getUserIdFromLoginToken(token)
+        return id != null && !isTokenExpired(token)
     }
 
-    override fun getNameFromLoginToken(token: String): String? {
+    override fun getUserIdFromLoginToken(token: String): Long? {
         val jwtProcessor = configJWTProcessor()
         val claims = jwtProcessor.process(token, null)
-        return claims.getClaim(USER_KEY) as String?
+        return claims.getClaim(USER_KEY) as Long?
     }
 
     private fun configJWTProcessor(): ConfigurableJWTProcessor<SimpleSecurityContext> {
