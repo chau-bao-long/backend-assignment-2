@@ -20,7 +20,7 @@ abstract class AbstractEntity<T> {
     var createdAt: LocalDateTime? = null
 
     @CreatedBy
-    @Column(name = "created_by", nullable = false)
+    @Column(name = "created_by", nullable = true)
     var createdBy: Long? = null
 
     @LastModifiedDate
@@ -28,5 +28,5 @@ abstract class AbstractEntity<T> {
     var updatedAt: LocalDateTime? = null
 
     @LastModifiedBy
-    @Column(name = "updated_by", nullable = false)
+    @Column(name = "updated_by", nullable = true)
     var updatedBy: Long? = null }

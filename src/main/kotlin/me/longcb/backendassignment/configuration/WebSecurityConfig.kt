@@ -55,7 +55,7 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .httpStrictTransportSecurity().and()
                 .frameOptions().sameOrigin().and()
                 .authorizeRequests()
-                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/auth/**", "/users/seed").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }

@@ -19,7 +19,8 @@ class UserServiceImpl: UserService {
     private lateinit var passwordEncoder: PasswordEncoder
 
     override fun seedUser() {
-
+        val userEntity = UserEntity("personia", passwordEncoder.encode("123456"))
+        userRepository.save(userEntity)
     }
 
     override fun checkLoginAndGetUser(login: Login): UserEntity? {

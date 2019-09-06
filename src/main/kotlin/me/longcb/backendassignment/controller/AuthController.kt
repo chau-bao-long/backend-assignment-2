@@ -21,9 +21,6 @@ class AuthController : BaseController() {
     @Autowired
     private lateinit var userService: UserService
 
-    @GetMapping(value = ["/test"])
-    fun test() = "dfd"
-
     @PostMapping
     fun login(@RequestBody login: Login): ResponseEntity<LoginDto> {
         val dto = LoginDto()
