@@ -1,4 +1,4 @@
-package me.longcb.backendassignment.model
+package me.longcb.backendassignment.entity
 
 import org.springframework.data.annotation.CreatedBy
 import org.springframework.data.annotation.CreatedDate
@@ -10,24 +10,23 @@ import javax.persistence.*
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener::class)
-abstract class AbstractModel<T> {
+abstract class AbstractEntity<T> {
     @Id
     @GeneratedValue
-    private var id: T? = null
+    var id: T? = null
 
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
-    private var createdAt: LocalDateTime? = null
+    var createdAt: LocalDateTime? = null
 
     @CreatedBy
     @Column(name = "created_by", nullable = false)
-    private var createdBy: Long? = null
+    var createdBy: Long? = null
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    private var updatedAt: LocalDateTime? = null
+    var updatedAt: LocalDateTime? = null
 
     @LastModifiedBy
     @Column(name = "updated_by", nullable = false)
-    private var updatedBy: Long? = null
-}
+    var updatedBy: Long? = null }

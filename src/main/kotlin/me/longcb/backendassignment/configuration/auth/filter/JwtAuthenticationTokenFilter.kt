@@ -1,6 +1,7 @@
 package me.longcb.backendassignment.configuration.auth.filter
 
 import JwtService
+import me.longcb.backendassignment.configuration.auth.CurrentUserDetails
 import me.longcb.backendassignment.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -8,6 +9,8 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.context.SecurityContextHolder
 
 class JwtAuthenticationTokenFilter : UsernamePasswordAuthenticationFilter() {
     companion object {
@@ -25,6 +28,12 @@ class JwtAuthenticationTokenFilter : UsernamePasswordAuthenticationFilter() {
         if (jwtService.validateLoginToken(authToken)) {
             val name = jwtService.getNameFromLoginToken(authToken)
             val user = userService.getUserByName(name)
+            user?.let {
+                val userDetail = CurrentUserDetails(user)
+                SecurityContextHolder.getContext().authentication = UsernamePasswordAuthenticationToken(
+                        userDetail, null, userDetail.authorities
+                )
+            }
         }
         chain?.doFilter(req, res)
     }

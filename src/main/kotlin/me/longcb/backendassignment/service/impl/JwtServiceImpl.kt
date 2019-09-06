@@ -24,9 +24,9 @@ class JwtServiceImpl : JwtService {
     @Value("\${spring.jwt.secret-key}")
     private var secretKey: String? = null
 
-    override fun generateLoginToken(name: String): String {
+    override fun generateLoginToken(userId: Long?): String {
         val claims = JWTClaimsSet.Builder()
-                .claim(NAME, name)
+                .claim(USER_KEY, userId)
                 .expirationTime(generateExpirationDate())
                 .build()
         val payload = Payload(claims.toJSONObject())
@@ -46,7 +46,7 @@ class JwtServiceImpl : JwtService {
     override fun getNameFromLoginToken(token: String): String? {
         val jwtProcessor = configJWTProcessor()
         val claims = jwtProcessor.process(token, null)
-        return claims.getClaim(NAME) as String?
+        return claims.getClaim(USER_KEY) as String?
     }
 
     private fun configJWTProcessor(): ConfigurableJWTProcessor<SimpleSecurityContext> {
@@ -73,6 +73,6 @@ class JwtServiceImpl : JwtService {
     private fun generateExpirationDate() = Date(System.currentTimeMillis() + expirationTime!!)
 
     companion object {
-        const val NAME = "userName"
+        const val USER_KEY = "userKey"
     }
 }

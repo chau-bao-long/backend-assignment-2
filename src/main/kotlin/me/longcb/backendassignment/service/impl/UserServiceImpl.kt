@@ -1,6 +1,7 @@
 package me.longcb.backendassignment.service.impl
 
-import me.longcb.backendassignment.model.User
+import me.longcb.backendassignment.entity.UserEntity
+import me.longcb.backendassignment.model.Login
 import me.longcb.backendassignment.repository.UserRepository
 import me.longcb.backendassignment.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,11 +22,14 @@ class UserServiceImpl: UserService {
 
     }
 
-    override fun checkLogin(): Boolean {
-        return true
+    override fun checkLoginAndGetUser(login: Login): UserEntity? {
+        if (login.name.isNullOrBlank() || login.password.isNullOrBlank()) return null
+        val user = userRepository.findByName(login.name) ?: return null
+        if (!passwordEncoder.matches(login.password, user.encryptedPassword)) return null
+        return user
     }
 
-    override fun getUserByName(name: String?): User {
+    override fun getUserByName(name: String?): UserEntity? {
         return userRepository.findByName(name)
     }
 }

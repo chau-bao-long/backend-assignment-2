@@ -1,5 +1,5 @@
 interface JwtService {
-    fun generateLoginToken(name: String): String
+    fun generateLoginToken(userId: Long?): String
 
     fun validateLoginToken(token: String?): Boolean
     
