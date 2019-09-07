@@ -14,6 +14,9 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
+import org.springframework.security.config.annotation.web.builders.WebSecurity
 
 @Configuration
 @EnableWebSecurity
@@ -22,14 +25,6 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     @Bean
     fun passwordEncoder(): PasswordEncoder {
         return BCryptPasswordEncoder()
-    }
-
-    @Bean
-    @Throws(Exception::class)
-    fun jwtAuthenticationTokenFilter(): JwtAuthenticationTokenFilter {
-        val jwtAuthenticationTokenFilter = JwtAuthenticationTokenFilter()
-        jwtAuthenticationTokenFilter.setAuthenticationManager(authenticationManager())
-        return jwtAuthenticationTokenFilter
     }
 
     @Bean
@@ -44,18 +39,18 @@ class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
     @Throws(Exception::class)
-    override fun configure(http: HttpSecurity) {
-        http.csrf().disable()
+    override fun configure(web: WebSecurity) {
+        web.ignoring().antMatchers("/auth", "/users/seed")
+    }
+
+    @Throws(Exception::class)
+    override fun configure(httpSecurity: HttpSecurity) {
+        httpSecurity
+                .csrf().disable()
                 .cors().configurationSource(corsConfigurationSource()).and()
-                .headers()
-                .contentTypeOptions().and()
-                .xssProtection().and()
-                .cacheControl().and()
-                .httpStrictTransportSecurity().and()
-                .frameOptions().sameOrigin().and()
-                .authorizeRequests()
-                .antMatchers("/auth/**", "/users/seed").permitAll()
-                .anyRequest().authenticated().and()
-                .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
+                .headers().cacheControl().and().contentTypeOptions().and().and()
+                .exceptionHandling().authenticationEntryPoint(Http403ForbiddenEntryPoint()).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .addFilterBefore(JwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter::class.java)
     }
 }
