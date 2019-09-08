@@ -7,8 +7,8 @@ import javax.persistence.Table
 @Entity
 @Table(name = "relations")
 data class RelationEntity(
-        @Column(name = "superior_id", nullable = false)
-        var superiorId: Long,
-        @Column(name = "subordinate_id", nullable = false)
-        var subordinateId: Long
+        @Column(name = "superior", nullable = false)
+        var superior: String,
+        @Column(name = "subordinate", nullable = false)
+        var subordinate: String
 ) : AbstractEntity<Long>()

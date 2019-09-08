@@ -1,5 +1,7 @@
 package me.longcb.backendassignment.service
 
+import me.longcb.backendassignment.entity.StaffEntity
+
 interface StaffService {
-    fun getSuperiors()
+    fun getSuperiors(staffName: String): Array<StaffEntity>
 }

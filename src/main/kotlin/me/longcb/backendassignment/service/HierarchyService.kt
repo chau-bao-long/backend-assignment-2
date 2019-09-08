@@ -1,12 +1,11 @@
 package me.longcb.backendassignment.service
 
-import me.longcb.backendassignment.entity.RelationEntity
-import me.longcb.backendassignment.entity.StaffEntity
+import me.longcb.backendassignment.model.TreeNode
 
 interface HierarchyService {
-    fun buildRelationship(relation: HashMap<String, String>): Pair<Array<StaffEntity>, Array<RelationEntity>>
+    fun buildRelationship(relationships: HashMap<String, String>)
 
-    fun buildHierarchy(staffs: Array<StaffEntity>, relations: Array<RelationEntity>): HashMap<String, *>
+    fun buildHierarchy(): TreeNode<String>
 
     fun cleanHierarchy()
 }
