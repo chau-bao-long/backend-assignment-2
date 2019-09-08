@@ -3,5 +3,5 @@ package me.longcb.backendassignment.service
 import me.longcb.backendassignment.entity.StaffEntity
 
 interface StaffService {
-    fun getSuperiors(staffName: String): Array<StaffEntity>
+    fun getSuperiors(staffName: String): List<StaffEntity>
 }

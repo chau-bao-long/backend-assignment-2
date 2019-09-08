@@ -1,6 +1,7 @@
 package me.longcb.backendassignment.controller
 
 import me.longcb.backendassignment.dto.StaffDto
+import me.longcb.backendassignment.dto.SuperiorDto
 import me.longcb.backendassignment.service.StaffService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Scope
@@ -17,8 +18,8 @@ class StaffController : BaseController() {
     private lateinit var staffService: StaffService
 
     @GetMapping("/{name}/superiors")
-    fun getSuperiors(@PathVariable("name") staffName: String): ResponseEntity<List<StaffDto>> {
-        val staffs = staffService.getSuperiors(staffName).map { e -> StaffDto(e.name) }
-        return ResponseEntity(staffs, HttpStatus.OK)
+    fun getSuperiors(@PathVariable("name") staffName: String): ResponseEntity<SuperiorDto> {
+        val staffs = staffService.getSuperiors(staffName).map { e -> StaffDto(e.id, e.name) }
+        return ResponseEntity(SuperiorDto(staffs), HttpStatus.OK)
     }
 }
