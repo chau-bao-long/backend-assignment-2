@@ -29,4 +29,5 @@ abstract class AbstractEntity<T> {
 
     @LastModifiedBy
     @Column(name = "updated_by", nullable = true)
-    var updatedBy: Long? = null }
+    var updatedBy: Long? = null
+}
