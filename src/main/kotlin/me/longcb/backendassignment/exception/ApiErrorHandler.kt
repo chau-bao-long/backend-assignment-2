@@ -14,25 +14,25 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 class ApiErrorHandler : ResponseEntityExceptionHandler() {
     override fun handleNoHandlerFoundException(ex: NoHandlerFoundException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
         val error = "No handler found for ${ex.httpMethod} ${ex.requestURL}"
-        val apiError = ApiError(HttpStatus.NOT_FOUND, ex.localizedMessage, error)
+        val apiError = ApiError(ErrorCode.UNCAUGHT_EXCEPTION, HttpStatus.NOT_FOUND, ex.localizedMessage, error)
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)
     }
 
     override fun handleMissingServletRequestParameter(ex: MissingServletRequestParameterException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
         val error = "${ex.parameterName} parameter is missing"
-        val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, error)
+        val apiError = ApiError(ErrorCode.BAD_REQUEST, HttpStatus.BAD_REQUEST, ex.localizedMessage, error)
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)
     }
 
     @ExceptionHandler(CustomException::class)
     fun handleCustomException(ex: CustomException, request: WebRequest): ResponseEntity<Any> {
-        val apiError = ApiError(HttpStatus.BAD_REQUEST, ex.localizedMessage, ex.message ?: "")
+        val apiError = ApiError(ex.errorCode, ex.httpCode, ex.localizedMessage, ex.message ?: "")
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)
     }
 
     @ExceptionHandler(Exception::class)
     fun handleAll(ex: Exception, request: WebRequest): ResponseEntity<Any> {
-        val apiError = ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.localizedMessage, "error occurred")
+        val apiError = ApiError(ErrorCode.UNCAUGHT_EXCEPTION, HttpStatus.INTERNAL_SERVER_ERROR, ex.localizedMessage, "error occurred")
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)
     }
 }

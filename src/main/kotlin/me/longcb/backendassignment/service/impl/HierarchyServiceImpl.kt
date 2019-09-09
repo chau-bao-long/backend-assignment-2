@@ -1,8 +1,10 @@
 package me.longcb.backendassignment.service.impl
 
+import me.longcb.backendassignment.configuration.auth.AuthenticationFacade
 import me.longcb.backendassignment.entity.RelationEntity
 import me.longcb.backendassignment.entity.StaffEntity
 import me.longcb.backendassignment.exception.CustomException
+import me.longcb.backendassignment.exception.ErrorCode
 import me.longcb.backendassignment.model.TreeNode
 import me.longcb.backendassignment.repository.RelationRepository
 import me.longcb.backendassignment.repository.StaffRepository
@@ -97,16 +99,16 @@ class HierarchyServiceImpl : HierarchyService {
             if (sub_axis.count { sub -> sub == 0 } == 1) acc.add(index)
             acc
         }
-        if (root.size != 1) throw CustomException("contain multiple root")
+        if (root.size != 1) throw CustomException(ErrorCode.HIERARCHY_MULTI_ROOT, "contain multiple root")
         return root.first()
     }
 
     @Throws(CustomException::class)
     private fun raiseConflict(superiorIndex: Int, subordinateIndexes: IntArray) {
         if (subordinateIndexes.all { sub -> sub == superiorIndex }) {
-            throw CustomException("${staffName(superiorIndex)} cannot be superior for himself/herself")
+            throw CustomException(ErrorCode.HIERARCHY_CONFLICT, "${staffName(superiorIndex)} cannot be superior for himself/herself")
         }
-        throw CustomException("""
+        throw CustomException(ErrorCode.HIERARCHY_CONFLICT, """
            ${staffName(superiorIndex)} cannot be supervisor of ${staffName(subordinateIndexes[0])}, because
            ${staffName(subordinateIndexes[0])} is supervisor of ${staffName(subordinateIndexes[1])},
            ${(2 until subordinateIndexes.size).fold("") { a, i ->
