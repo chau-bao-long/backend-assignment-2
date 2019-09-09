@@ -3,12 +3,15 @@ package me.longcb.backendassignment.exception
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
+import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.context.request.WebRequest
 import org.springframework.web.servlet.NoHandlerFoundException
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
+import javax.validation.ConstraintViolationException
 
 @ControllerAdvice
 class ApiErrorHandler : ResponseEntityExceptionHandler() {
@@ -27,6 +30,22 @@ class ApiErrorHandler : ResponseEntityExceptionHandler() {
     @ExceptionHandler(CustomException::class)
     fun handleCustomException(ex: CustomException, request: WebRequest): ResponseEntity<Any> {
         val apiError = ApiError(ex.errorCode, ex.httpCode, ex.localizedMessage, ex.message ?: "")
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    override fun handleMethodArgumentNotValid(ex: MethodArgumentNotValidException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
+        val apiError = ApiError(ErrorCode.INVALID_PARAMS, HttpStatus.BAD_REQUEST, ex.localizedMessage, ex.message)
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    override fun handleHttpMessageNotReadable(ex: HttpMessageNotReadableException, headers: HttpHeaders, status: HttpStatus, request: WebRequest): ResponseEntity<Any> {
+        val apiError = ApiError(ErrorCode.INVALID_PARAMS, HttpStatus.BAD_REQUEST, ex.localizedMessage, ex.message ?: "")
+        return ResponseEntity(apiError, HttpHeaders(), apiError.status)
+    }
+
+    @ExceptionHandler(ConstraintViolationException::class)
+    fun handleConstraintViolation(ex: ConstraintViolationException, request: WebRequest): ResponseEntity<Any> {
+        val apiError = ApiError(ErrorCode.INVALID_PARAMS, HttpStatus.BAD_REQUEST, ex.localizedMessage, ex.message ?: "")
         return ResponseEntity(apiError, HttpHeaders(), apiError.status)
     }
 
