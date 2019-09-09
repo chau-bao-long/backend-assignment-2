@@ -16,9 +16,8 @@ class HierarchyController : BaseController() {
     private lateinit var hierarchyService: HierarchyService
 
     @PostMapping
-    fun create(@RequestBody relationships: HashMap<String, String>) {
-        hierarchyService.buildRelationship(relationships)
-    }
+    fun create(@RequestBody relationships: HashMap<String, String>): ResponseEntity<String> =
+            ResponseEntity(hierarchyService.buildRelationship(relationships).toJsonString(), HttpStatus.CREATED)
 
     @GetMapping
     fun getHierarchy(): ResponseEntity<String> =

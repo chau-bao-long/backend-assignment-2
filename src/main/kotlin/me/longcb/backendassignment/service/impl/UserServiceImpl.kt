@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 
 @Service
 @Scope("prototype")
-class UserServiceImpl: UserService {
+class UserServiceImpl : UserService {
     @Autowired
     private lateinit var userRepository: UserRepository
 
@@ -32,5 +32,5 @@ class UserServiceImpl: UserService {
     }
 
     override fun getUserById(id: Long?): UserEntity? =
-            if(id != null) userRepository.findByIdOrNull(id) else null
+            if (id != null) userRepository.findByIdOrNull(id) else null
 }
