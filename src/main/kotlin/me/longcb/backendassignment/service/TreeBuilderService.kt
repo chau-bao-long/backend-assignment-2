@@ -12,6 +12,7 @@ class TreeBuilderService(private val staffs: List<StaffEntity>, private val rela
     private var matrix: Array<IntArray>
 
     init {
+        if (staffs.isEmpty() || relations.isEmpty()) throw CustomException(ErrorCode.HIERARCHY_EMPTY, "Hierarchy is empty")
         this.positionMap = staffs.foldIndexed(HashMap()) { index, acc, item -> acc[item.name] = index; acc }
         this.matrix = Array(staffs.size) { IntArray(staffs.size) }
     }
@@ -76,7 +77,7 @@ class TreeBuilderService(private val staffs: List<StaffEntity>, private val rela
 
     private fun findSuperiorIndexes(subordinateIndex: Int) =
             matrix.foldIndexed(ArrayList<Int>()) { index, acc, sup ->
-                if (sup[subordinateIndex] == 1) acc.add(index)
+                if (sup[subordinateIndex] > 0) acc.add(index)
                 acc
             }
 

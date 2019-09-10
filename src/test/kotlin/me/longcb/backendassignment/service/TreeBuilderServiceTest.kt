@@ -41,7 +41,7 @@ class TreeBuilderServiceTest {
 
     @Test
     fun givenSelfEmployedHierarchy_whenBuildTree_thenReturnError() {
-       val relation = RelationEntity("Jonas", "Jonas")
+        val relation = RelationEntity("Jonas", "Jonas")
         assertThrows<CustomException>("Jonas cannot be superior for himself/herself") {
             TreeBuilderService(listOf(jonas), listOf(relation)).build()
         }
