@@ -20,7 +20,7 @@ class JwtAuthenticationTokenFilter : GenericFilterBean() {
 
     override fun doFilter(req: ServletRequest?, res: ServletResponse?, chain: FilterChain?) {
         lazyInitService(req)
-        val authToken = (req as HttpServletRequest).getHeader(TOKEN_HEADER)
+        val authToken = (req as HttpServletRequest).getHeader(TOKEN_HEADER).replace(AUTH_TYPE, "")
         try {
             if (!jwtService!!.validateLoginToken(authToken)) {
                 responseAuthError(res); return
@@ -47,11 +47,22 @@ class JwtAuthenticationTokenFilter : GenericFilterBean() {
     }
 
     private fun responseAuthError(res: ServletResponse?) {
-        (res as? HttpServletResponse)?.sendError(HttpServletResponse.SC_UNAUTHORIZED, UNAUTHORIZED_ERROR)
+        val response = res as HttpServletResponse
+        val out = response.writer
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        out.print(unauthorizedResponse)
+        out.flush()
     }
 
     companion object {
         const val TOKEN_HEADER = "X-Authorization"
-        const val UNAUTHORIZED_ERROR = "The token is not valid."
+        const val AUTH_TYPE = "Bearer "
+        const val unauthorizedResponse = """
+            {
+                "code": "UNAUTHORIZED",
+                "message": "The token is not valid.",
+                "errors": []
+            }
+        """
     }
 }
